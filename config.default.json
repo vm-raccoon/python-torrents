@@ -1,0 +1,9 @@
+[
+    {
+        "sqlite": "DATABASE",
+        "telegram": {
+            "bot_token": "TOKEN",
+            "chat_id": -1234567890
+        }
+    }
+]
