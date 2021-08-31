@@ -1,0 +1,6 @@
+.idea/
+config.json
+__pycache__/
+*.exe
+*.sqlite3
+default.db
