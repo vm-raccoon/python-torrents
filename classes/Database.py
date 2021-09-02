@@ -1,5 +1,4 @@
 from classes.URI import URI
-from classes.Exception import Exception
 import sqlite3
 
 class Database:
@@ -61,7 +60,9 @@ class Database:
                 "Value" as "value",
                 "Trash" as "trash"
             from 
-                uri;
+                uri
+            where 
+                "Trash" = 0;
         """
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -74,7 +75,7 @@ class Database:
             connection = sqlite3.connect(self.__filename)
             connection.row_factory = sqlite3.Row
             for item in self.__getListURI(connection):
-                list.append(URI(item))
+                list.append(URI(item, True))
         except sqlite3.Error as error:
             print(error)
         finally:
@@ -90,26 +91,46 @@ class Database:
                 "Value" as "value",
                 "Trash" as "trash"
             from 
-                exception;
+                exception
+            where 
+                "Trash" = 0;
         """
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
         return rows
 
-    def getListException(self, as_list=False):
+    def getListException(self):
         list = []
         try:
             connection = sqlite3.connect(self.__filename)
             connection.row_factory = sqlite3.Row
             for item in self.__getListException(connection):
-                if as_list:
-                    list.append(item["value"])
-                else:
-                    list.append(Exception(item))
+                list.append(item["value"])
         except sqlite3.Error as error:
             print(error)
         finally:
             if connection:
                 connection.close()
         return list
+
+    def setUpdate(self, row_id, value):
+        try:
+            connection = sqlite3.connect(self.__filename)
+            cursor = connection.cursor()
+            query = f"""
+                update
+                    uri
+                set
+                    "Value" = '{value}'
+                where 
+                    "ID" = {row_id};
+            """
+            cursor.execute(query)
+            connection.commit()
+            cursor.close()
+        except Exception as error:
+            print(error)
+        finally:
+            if connection:
+                connection.close()

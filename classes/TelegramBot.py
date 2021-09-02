@@ -6,13 +6,11 @@ class TelegramBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token, parse_mode="HTML")
 
-    def sendMessage(self, chatID, overview):
+    def sendMessage(self, chatID, uriObject):
         try:
             self.bot.send_message(chatID, "\n".join([
-                "<b>{}</b>".format(overview["username"]),
-                "\U0001F4B5 <b>{:.2f}</b> грн ({:.2f} грн)".format(overview["balance"], -overview["diff"]),
-                "\U0001F4F6 {} {}, {} грн".format(overview["rate"], overview["speed"], overview["cost"]),
-                "{}".format(overview["message_end"]),
+                "<a href='{}'>\U0001F517 <b>{}</b></a>\n".format(uriObject.uri, uriObject.name),
+                "{}".format(uriObject.value),
             ]))
             return True
         except Exception as e:
