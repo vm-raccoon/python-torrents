@@ -5,10 +5,18 @@ from classes.TelegramBot import TelegramBot
 
 for item in Config(__file__, "config.json").read():
     db = DB(item["sqlite"])
-    uri = db.getListURI()
-    exception = db.getListException(as_list=True)
+    uriList = db.getListURI()
+    exceptionList = db.getListException()
 
-    # print(exception[0])
+    for u in uriList:
+        update = u.getUpdate()
 
-    # bot = TelegramBot(item["telegram"]["bot-token"])
-    # bot.sendMessage(item["telegram"]["chat_id"], overviewCopy)
+        if update in exceptionList or u.value == update:
+            continue
+
+        u.value = update
+        db.setUpdate(u.id, update)
+
+        bot = TelegramBot(item["telegram"]["bot_token"])
+        bot.sendMessage(item["telegram"]["chat_id"], u)
+
