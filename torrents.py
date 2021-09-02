@@ -4,6 +4,7 @@ from classes.TelegramBot import TelegramBot
 
 
 for item in Config(__file__, "config.json").read():
+    bot = TelegramBot(item["telegram"]["bot_token"])
     db = DB(item["sqlite"])
     uriList = db.getListURI()
     exceptionList = db.getListException()
@@ -16,7 +17,5 @@ for item in Config(__file__, "config.json").read():
 
         u.value = update
         db.setUpdate(u.id, update)
-
-        bot = TelegramBot(item["telegram"]["bot_token"])
         bot.sendMessage(item["telegram"]["chat_id"], u)
 
