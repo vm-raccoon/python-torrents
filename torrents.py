@@ -12,10 +12,9 @@ for item in Config(__file__, "config.json").read():
     for u in uriList:
         update = u.getUpdate()
 
-        if update in exceptionList or u.value == update:
+        if update in exceptionList or u.value == update or not update:
             continue
 
         u.value = update
         db.setUpdate(u.id, update)
         bot.sendMessage(item["telegram"]["chat_id"], u)
-
